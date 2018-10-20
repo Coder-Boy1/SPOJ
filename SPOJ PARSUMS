@@ -1,0 +1,68 @@
+// Can be done by maintaining prefix sum.
+// Prefix sum. then concentrating current prefix to back side and changing the required value accordingly.
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define ll long long
+
+#define mod 1000000007
+
+ll gcd(ll aa,ll bb) { if(aa==0) return bb; return(bb%aa,aa); }
+
+
+int main()
+{
+    ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+    while(1)
+    {
+        int n;
+        cin>>n;
+        if(n==0)
+            break;
+        
+        vector < int > a(n);
+        multiset < int > me;
+        int s=0;
+        for(int i=0;i<n;i++)
+        {
+            cin>>a[i];
+            s+=a[i];
+            me.insert(s);
+        }
+        int last=s;
+        s=0;
+        
+        int cur=0;
+        
+        multiset <int>::iterator it;
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            int flag=0;
+            it=me.lower_bound(cur);    
+            if(*it < cur)
+                flag=1;
+            if(it!=me.begin())
+            {
+                it--;
+                if(*it < cur)
+                    flag=1;
+            }
+            if(flag==0)
+                ans++;
+            cur+=a[i];
+            it=me.lower_bound(cur);
+            me.erase(it);
+            last+=a[i];
+            me.insert(last);
+        }
+        cout<<ans<<endl;
+        
+        
+    }
+
+
+    return 0;
+}
