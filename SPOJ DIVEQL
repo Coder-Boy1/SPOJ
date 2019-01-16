@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define ll long long
+#define int long long
+
+int mod=1000000007;
+
+int power(int x, unsigned int y, int p) 
+{ 
+    int res = 1;      // Initialize result 
+  
+    x = x % p;  // Update x if it is more than or  
+                // equal to p 
+  
+    while (y > 0) 
+    { 
+        // If y is odd, multiply x with result 
+        if (y & 1) 
+            res = (res*x) % p; 
+  
+        // y must be even now 
+        y = y>>1; // y = y/2 
+        x = (x*x) % p;   
+    } 
+    return res; 
+} 
+        
+
+int32_t main()
+{
+        int t;
+        cin>>t;
+        set < int > me;
+        int cur=2;
+        for(int i=1;;i++)
+        {
+                if(cur>1e18)
+                        break;
+                me.insert(cur);
+                cur*=2;
+        }
+        while(t--)
+        {
+                int n,p;
+                cin>>n>>p;
+                
+                int ans=power(p,n,mod);
+                ans--;
+                ans+=mod;
+                ans%=mod;
+                int temp=power(p-1,mod-2,mod);
+                ans*=temp;
+                ans%=mod;
+                cout<<ans<<" ";
+                ans=power(p,n-1,mod);
+                cout<<ans<<endl; 
+        }
+        return 0;
+}
