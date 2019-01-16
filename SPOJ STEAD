@@ -1,3 +1,11 @@
+// First we use binary search on answer, If length x is possible than it is possible for length>x too. So we can apply binary search.
+// Now how to check for a given values. So suppose we want to check for y. That is answer possible using atmost Y length or not.
+// So we can take part as from 1 to y ... 2 to y+1 ... 3 to y+2 ... 4 to y+3 ... so on ....
+// Now for checking for each part we can apply max flow. 
+// In max flow assume super source of n nodes and super sink of B barns. Now we know that from super sink to each cow only 1 weight can go.
+// And from every barn to Sink we have capacity. Now for out current range... we can add edges that this cow can go to these barns.
+// Finally find max flow from source to sink. If it is N then all n cow can go to barns using the given range otherwies they can't.
+
 #include <bits/stdc++.h>
 
 using namespace std;
