@@ -1,3 +1,9 @@
+// ((((z-x)p-x)p)-x)p ... this happens for n times.... here I have shown from three times.
+// Not making z subject z = x + x/p + x/(p^2) + ....
+
+// Also we can do z/x and then check get that p^n - 1 / (p^(n-1) (p-1)) ... now both denominator and numerator should be co prime them it will be minimum. 
+// p^n -1 divides p-1 so taking p^n - 1 / p-1 as numerator and  1/p^n-1 as denominator gives us the answer. 
+
 #include <bits/stdc++.h>
 
 using namespace std;
