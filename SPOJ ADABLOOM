@@ -1,3 +1,12 @@
+// This problem can be solved if know the maximum matching of the given graph.
+// But we cannot divide it in left and right parts directly by considering n/2 nodes on left and n/2 on right.
+// So, What we can do is Divide every elemenent in two parts. One its incoming part and one its out going part.
+// Take all incoming nodes in left part . and all outgoing nodes in right part.
+// for edge (u,v) draw edge from out(v) to in(u) ..... and out(u) to in(v)
+// Find maximum matching ... the answer half of that.
+// Because for each edge (u,v) of original graph we will get 2 matching edge.
+
+
 #include <bits/stdc++.h>
  
 using namespace std;
@@ -8,7 +17,9 @@ using namespace std;
 #define N 100005
  
 //1 indexed Hopcroft-Karp Matching in O(E sqrtV)
- 
+
+
+
 struct Hopcroft_Karp
 {
         static const int inf = 1e9;
