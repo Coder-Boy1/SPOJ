@@ -1,0 +1,119 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define N 100005
+#define inf 100000000
+#define mod 10007
+#define ll long long
+
+vector < int > a[N]; 
+int dp[N][2];
+int vis[N];
+int pos[N][2];
+
+ll gcd(ll aa,ll bb) { if(aa==0) return bb; return(bb%aa,aa); }
+
+/* Iterative Function to calculate (x^y)%p in O(log y) */
+ll power(ll x, ll y, ll p)
+{
+    ll res = 1;      // Initialize result
+
+    x = x % p;  // Update x if it is more than or
+                // equal to p
+
+    while (y > 0)
+    {
+        // If y is odd, multiply x with result
+        if (y & 1)
+            res = (res*x) % p;
+
+        // y must be even now
+        y = y>>1; // y = y/2
+        x = (x*x) % p;
+    }
+    return res;
+}
+
+
+void findans(int n,int state,int parent)
+{
+        if(dp[n][state]!=inf)
+                return;
+
+        dp[n][state]=0;
+        for(int i=0;i<a[n].size();i++)
+        {
+                if(a[n][i]!=parent)
+                {
+                                findans(a[n][i],0,n);
+                                findans(a[n][i],1,n);
+                }
+        }
+
+        int ans=1,val=1;
+        for(int i=0;i<a[n].size();i++)
+        {
+                if(a[n][i]!=parent)
+                {
+                        ans+=dp[a[n][i]][1];
+                        val=val*pos[a[n][i]][1];
+                        val%=mod;
+                }
+        }
+        dp[n][state]=ans;
+        pos[n][state]=val%mod;
+
+        if(state==1)
+        {
+                int temp=0,val=1;
+                for(int i=0;i<a[n].size();i++)
+                {
+                        if(a[n][i]!=parent)
+                        {
+                                temp+=dp[a[n][i]][0];
+                                val*=pos[a[n][i]][0];
+                                val%=mod;
+                        }
+                }
+                if(dp[n][state]==temp)
+                        pos[n][state]+=val;
+                if(dp[n][state]>temp)
+                {
+                        pos[n][state]=val;
+                        dp[n][state]=temp;
+                }
+                        pos[n][state]%=mod;
+        }
+
+}
+
+int main()
+{
+        int t;
+        cin>>t;
+
+        while(t--)
+        {
+                int n;
+                cin>>n;
+                for(int i=1;i<=n;i++)
+                {
+                        a[i].clear();
+                        vis[i]=0;
+                        dp[i][0]=dp[i][1]=inf;
+                }
+                for(int i=0;i<n-1;i++)
+                {
+                        int t1,t2;
+                        cin>>t1>>t2;
+                        a[t1].push_back(t2);
+                        a[t2].push_back(t1);
+                }
+                findans(1,1,0);   
+                cout<<dp[1][1]<<" "<<pos[1][1]<<endl;
+                
+
+        }
+        return 0;
+}
