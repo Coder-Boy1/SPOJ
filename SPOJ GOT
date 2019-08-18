@@ -1,3 +1,11 @@
+// Lets suppose this question was for array and then try to find the actual answer.
+// So given array of N integers in each query three integers are givin L R and P.
+// You have to tell wether their exist P between elements from A[L], A[L+1] ,..... , A[R].
+// You can do this question with help of Merge sort tree with eac query taking Log^2 time.
+// For tree Divide the query in two parts L to LCA and R to LCA. 
+// Build a HLD array of merge sort type.
+// For Query travel HLD as normal HLD traversal,with that for each branch of the path query for the answer.
+
 #include <bits/stdc++.h>
  
 using namespace std;
