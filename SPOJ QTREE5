@@ -1,0 +1,203 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define N 100005
+
+vector < int > a[N];
+int vis[N];
+int sz[N];
+int parent[N];
+
+void dfsSZ(int n, int p= -1)
+{
+    sz[n] = 1;
+    for(int i=0;i<a[n].size();i++)
+    {
+        if(vis[a[n][i]] || a[n][i]==p)
+            continue;
+        dfsSZ(a[n][i], n);
+        sz[n]+=sz[a[n][i]];
+        
+    }
+}
+
+int findCenteroid(int n, int p, int ts)
+{
+    for(int i=0;i<a[n].size();i++)
+    {
+        if(vis[a[n][i]] || a[n][i]==p)
+            continue;
+        if( sz[a[n][i]] > ts/2)
+            return findCenteroid(a[n][i], n, ts);
+    }
+    return n;
+}
+
+void makeCT(int n, int par)
+{
+    dfsSZ(n);
+    int cen = findCenteroid(n, -1, sz[n]);
+    vis[cen] = 1;
+    parent[cen] = par;
+    for(int i=0;i<a[cen].size();i++)
+    {
+        if(vis[a[cen][i]]==0)
+        {
+            makeCT(a[cen][i], cen);
+        }
+    }
+}
+
+int parent1[N][20];
+int level[N];
+int LG = 20;
+
+void dfs(int n, int p = -1)
+{
+    for(int i=0;i<a[n].size();i++)
+    {
+        if(a[n][i]!=p)
+        {
+            level[a[n][i]] = level[n] + 1;
+            parent1[a[n][i]][0] = n;
+            dfs(a[n][i], n);
+        }
+    }
+}
+
+
+int lca(int u, int v)
+{
+    if(level[u]<level[v])
+        swap(u,v);
+
+    int diff = level[u] - level[v];
+    for(int i=LG-1;i>=0;i--)
+    {
+        if((1<<i) & diff)
+        {
+            u = parent1[u][i];
+        }
+    }
+
+    if(u==v)
+        return u;
+
+    for(int i=LG-1;i>=0;i--)
+    {
+        if(parent1[u][i] && parent1[u][i]!=parent1[v][i])
+        {
+            u=parent1[u][i];
+            v=parent1[v][i];
+        }
+    }
+    return parent1[u][0];
+}
+
+set < pair < int , int > > dist[N];
+int col[N];
+
+int getdis(int u, int v)
+{
+    int c = lca(u, v);
+    return level[u] + level[v] - 2*level[c];
+}
+
+
+void update(int n)
+{
+    col[n]^=1;
+    int cur = n;
+    if(col[n]==1)
+    {
+        while(n>=0)
+        {
+            dist[n].insert({getdis(n, cur), cur});
+            n = parent[n];
+        }
+    }  
+    else
+    {
+        while(n>=0)
+        {
+            dist[n].erase({getdis(n, cur), cur});
+            n = parent[n];
+        }
+    }
+}
+
+int getnoded(int n)
+{
+    if(dist[n].size()==0)
+        return 1e9;
+    return (*dist[n].begin()).first;
+}
+
+
+int32_t main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n;
+    cin>>n;
+
+    for(int i=1;i<n;i++)
+    {
+        int u, v;
+        cin>>u>>v;
+        a[u].push_back(v);
+        a[v].push_back(u);
+    }    
+
+    makeCT(1, -1);
+    dfs(1);
+
+
+    for(int i=1;i<20;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(parent1[j][i-1])
+            {
+                parent1[j][i] = parent1[parent1[j][i-1]][i-1]; 
+            }
+        }
+    }
+
+    int m;
+    cin>>m;
+
+    for(int i=1;i<=m;i++)
+    {
+        int t;
+        cin>>t;
+
+        int ans = 1e9;
+        if(t==0)
+        {
+            int u;
+            cin>>u;
+            update(u);
+        }
+        else
+        {
+            int u;
+            cin>>u;
+            int cur = u;
+            while(u>=0)
+            {
+                ans = min(ans, getnoded(u) + getdis(u, cur));
+                u = parent[u];
+            }
+            if(ans==1e9)
+                ans = -1;
+            cout<<ans<<'\n';
+        }
+    }
+
+
+
+    return 0;
+}
